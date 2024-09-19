@@ -136,7 +136,7 @@ func main() {
 
 	w.SetMainMenu(mb)
 	w.SetContent(
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewBorderLayout(
 				tb, inf, nil, nil,
 			),
