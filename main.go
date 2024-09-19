@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 
 	"fyne.io/fyne/v2"
@@ -15,7 +14,6 @@ import (
 
 func main() {
 	a := app.New()
-	a.Settings().SetTheme(theme.DarkTheme())
 	w := a.NewWindow("Editor")
 	edit := widget.NewEntry()
 	edit.MultiLine = true
@@ -38,7 +36,7 @@ func main() {
 		dialog.ShowCustomConfirm("Open file name", "OK", "Cancel", f, func(b bool) {
 			if b {
 				fn := f.Text + ".txt"
-				ba, er := ioutil.ReadFile(fn)
+				ba, er := os.ReadFile(fn)
 				if er != nil {
 					dialog.ShowError(er, w)
 				} else {
@@ -56,7 +54,7 @@ func main() {
 			"Cancel", f, func(b bool) {
 				if b {
 					fn := f.Text + ".txt"
-					er := ioutil.WriteFile(fn, []byte(edit.Text), os.ModePerm)
+					er := os.WriteFile(fn, []byte(edit.Text), os.ModePerm)
 					if er != nil {
 						dialog.ShowError(er, w)
 						return
@@ -75,20 +73,6 @@ func main() {
 		}, w)
 	}
 
-	tf := true
-
-	// change theme function
-	cf := func() {
-		if tf {
-			a.Settings().SetTheme(theme.LightTheme())
-			inf.SetText("change to Light-Theme.")
-		} else {
-			a.Settings().SetTheme(theme.DarkTheme())
-			inf.SetText("change to Dark-Theme.")
-		}
-		tf = !tf
-	}
-
 	// create memubar function
 	createMenubar := func() *fyne.MainMenu {
 		return fyne.NewMainMenu(
@@ -101,9 +85,6 @@ func main() {
 				}),
 				fyne.NewMenuItem("Save...", func() {
 					sf()
-				}),
-				fyne.NewMenuItem("Change Theme", func() {
-					cf()
 				}),
 				fyne.NewMenuItem("quite", func() {
 					qf()
